@@ -14,6 +14,10 @@ public class CommentResponse {
     private Author author;
     private String content;
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Author {
         private String id;
         private String name;

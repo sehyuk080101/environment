@@ -15,6 +15,10 @@ public class ArticleDetailResponse {
     private String title;
     private String content;
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Author {
         private String id;
         private String name;

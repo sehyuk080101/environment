@@ -46,7 +46,7 @@ public class ArticleService {
         return articleEntities.stream().map(article -> new ArticleDTO(article.getArticleId(), article.getTitle(), article.getContent())).toList();
     }
 
-    public String updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
+    public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
         ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
 
         if (articleEntity == null) {
@@ -63,11 +63,9 @@ public class ArticleService {
         articleEntity.setContent(updateArticleDTO.getContent());
 
         articleRepository.save(articleEntity);
-
-        return "성공적으로 게시글을 수정했습니다.";
     }
 
-    public String deleteArticle(String articleId) {
+    public void deleteArticle(String articleId) {
         ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
 
         if (articleEntity == null) {
@@ -75,7 +73,5 @@ public class ArticleService {
         }
 
         articleRepository.delete(articleEntity);
-
-        return "성공적으로 게시글을 삭제했습니다.";
     }
 }
