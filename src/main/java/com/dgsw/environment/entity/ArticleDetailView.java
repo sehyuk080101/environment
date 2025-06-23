@@ -2,7 +2,7 @@ package com.dgsw.environment.entity;
 
 import java.time.LocalDateTime;
 
-public interface ArticleView {
+public interface ArticleDetailView {
     String getId();
 
     String getAuthorId();
@@ -10,6 +10,10 @@ public interface ArticleView {
     String getAuthorName();
 
     String getTitle();
+
+    String getContent();
+
+    LocalDateTime getCreatedAt();
 
     LocalDateTime getUpdatedAt();
 }
