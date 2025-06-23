@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateArticleDTO {
+public class UpdateArticleRequest {
     private String title;
     private String content;
 }
