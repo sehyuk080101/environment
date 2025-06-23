@@ -15,17 +15,15 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<CommentEntity, String> {
     Optional<CommentEntity> findByIdAndArticleId(String commentId, String articleId);
 
-    boolean existsByIdAndArticleId(String commentId, String articleId);
-
     @Query(value = """
-        SELECT 
-            c.id as id,
-            c.content as content,
-            u.id as authorId,
-            u.username as authorName
-        FROM comments c
-        JOIN users u ON c.author_id = u.id
-        WHERE c.article_id = :articleId
-    """, nativeQuery = true)
+                SELECT 
+                    c.id as id,
+                    c.content as content,
+                    u.id as authorId,
+                    u.username as authorName
+                FROM comments c
+                JOIN users u ON c.author_id = u.id
+                WHERE c.article_id = :articleId
+            """, nativeQuery = true)
     List<CommentView> findCommentViewsByArticleId(@Param("articleId") String articleId);
 }
