@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateCommentDTO {
+public class UpdateCommentRequest {
     private String content;
 }
