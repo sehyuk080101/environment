@@ -1,8 +1,6 @@
 package com.dgsw.environment.controller;
 
-import com.dgsw.environment.dto.CommentDTO;
-import com.dgsw.environment.dto.ResponseDTO;
-import com.dgsw.environment.dto.UpdateCommentDTO;
+import com.dgsw.environment.dto.*;
 import com.dgsw.environment.service.CommentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,32 +16,31 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping
-    public ResponseDTO writeComment(@PathVariable String articleId, @RequestBody CommentDTO commentDTO) {
-        String message = commentService.writeComment(articleId, commentDTO);
+    public ResponseDTO writeComment(@PathVariable String articleId, @RequestBody CreateCommentRequest request) {
+        commentService.writeComment(articleId, request, "2419");
 
-        return new ResponseDTO(message);
+        return new ResponseDTO("성공적으로 댓글을 작성했습니다.");
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseDTO deleteComment(@PathVariable String articleId, @PathVariable String commentId) {
-        String message = commentService.deleteComment(articleId, commentId);
+        commentService.deleteComment(articleId, commentId, "2419");
 
-        return new ResponseDTO(message);
-    }
-
-    @GetMapping("/{commentId}")
-    public CommentDTO getComment(@PathVariable String articleId, @PathVariable String commentId) {
-        return commentService.getComment(articleId, commentId);
+        return new ResponseDTO("성공적으로 댓글을 삭제했습니다.");
     }
 
     @GetMapping
-    public List<CommentDTO> getCommentsByArticleId(@PathVariable String articleId) {
+    public List<CommentResponse> getCommentsByArticleId(@PathVariable String articleId) {
         return commentService.getAllComments(articleId);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseDTO updateCommentByArticleId(@PathVariable String articleId, @PathVariable String commentId, @RequestBody UpdateCommentDTO updateCommentDTO) {
-        String message = commentService.updateComment(articleId, commentId, updateCommentDTO);
+    public ResponseDTO updateCommentByArticleId(
+            @PathVariable String articleId,
+            @PathVariable String commentId,
+            @RequestBody UpdateCommentRequest request
+    ) {
+        String message = commentService.updateComment(articleId, commentId, request, "2419");
 
         return new ResponseDTO(message);
     }

@@ -1,8 +1,7 @@
 package com.dgsw.environment.controller;
 
-import com.dgsw.environment.dto.ArticleDTO;
 import com.dgsw.environment.dto.ResponseDTO;
-import com.dgsw.environment.dto.UpdateArticleDTO;
+import com.dgsw.environment.dto.UpdateArticleRequest;
 import com.dgsw.environment.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class ArticleController{
     }
 
     @PutMapping("/{articleId}")
-    public ResponseDTO updateArticle(@PathVariable String articleId,@RequestBody UpdateArticleDTO updateArticleDTO){
+    public ResponseDTO updateArticle(@PathVariable String articleId,@RequestBody UpdateArticleRequest updateArticleDTO){
         String message=articleService.updateArticle(articleId,updateArticleDTO);
 
         return new ResponseDTO(message);

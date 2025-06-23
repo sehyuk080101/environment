@@ -1,63 +1,61 @@
 package com.dgsw.environment.service;
 
-import com.dgsw.environment.dto.ArticleDTO;
-import com.dgsw.environment.dto.UpdateArticleDTO;
+import com.dgsw.environment.dto.ArticleDetailResponse;
+import com.dgsw.environment.dto.ArticleResponse;
+import com.dgsw.environment.dto.CreateArticleRequest;
+import com.dgsw.environment.dto.UpdateArticleRequest;
 import com.dgsw.environment.entity.ArticleEntity;
 import com.dgsw.environment.repository.ArticleRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ArticleService {
-    @Autowired
-    ArticleRepository articleRepository;
+    private final ArticleRepository articleRepository;
 
-    public String writeArticle(ArticleDTO articleDTO){
-        ArticleEntity articleEntity=new ArticleEntity();
-        articleEntity.setArticleId(articleDTO.getArticleId());
-        articleEntity.setTitle(articleDTO.getTitle());
-        articleEntity.setContent(articleDTO.getContent());
+    public void writeArticle(CreateArticleRequest request) {
+        ArticleEntity articleEntity = new ArticleEntity();
 
-        if(articleRepository.existsById(articleDTO.getArticleId())){
-            throw new RuntimeException("게시글이 이미 존재합니다.");
-        }
+        articleEntity.setArticleId(UUID.randomUUID().toString());
+        articleEntity.setTitle(request.getTitle());
+        articleEntity.setContent(request.getContent());
 
         articleRepository.save(articleEntity);
-
-        return "성공적으로 게시글을 작성했습니다.";
     }
 
-    public ArticleDTO getArticle(String articleId){
-        ArticleEntity articleEntity=articleRepository.findById(articleId).orElse(null);
+    public ArticleDetailResponse getArticle(String articleId) {
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
 
-        if(articleEntity==null){
+        if (articleEntity == null) {
             throw new RuntimeException("게시글이 존재하지 않습니다.");
         }
 
-        return new ArticleDTO(articleEntity.getArticleId(),articleEntity.getTitle(),articleEntity.getContent());
+        return new ArticleDTO(articleEntity.getArticleId(), articleEntity.getTitle(), articleEntity.getContent());
     }
 
-    public List<ArticleDTO> getAllArticles(){
-        List<ArticleEntity> articleEntities=articleRepository.findAll();
+    public List<ArticleResponse> getAllArticles() {
+        List<ArticleEntity> articleEntities = articleRepository.findAll();
 
-        return articleEntities.stream().map(article -> new ArticleDTO(article.getArticleId(),article.getTitle(),article.getContent())).toList();
+        return articleEntities.stream().map(article -> new ArticleDTO(article.getArticleId(), article.getTitle(), article.getContent())).toList();
     }
 
-    public String updateArticle(String articleId, UpdateArticleDTO updateArticleDTO){
-        ArticleEntity articleEntity=articleRepository.findById(articleId).orElse(null);
+    public String updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
 
-        if(articleEntity==null){
+        if (articleEntity == null) {
             throw new RuntimeException("게시글이 존재하지 않습니다.");
         }
-        if(updateArticleDTO.getTitle().isBlank()){
+        if (updateArticleDTO.getTitle().isBlank()) {
             throw new RuntimeException("제목은 공백이 될 수 없습니다.");
         }
-        if(updateArticleDTO.getContent().isBlank()){
+        if (updateArticleDTO.getContent().isBlank()) {
             throw new RuntimeException("내용은 공백이 될 수 없습니다.");
         }
 
@@ -69,10 +67,10 @@ public class ArticleService {
         return "성공적으로 게시글을 수정했습니다.";
     }
 
-    public String deleteArticle(String articleId){
-        ArticleEntity articleEntity=articleRepository.findById(articleId).orElse(null);
+    public String deleteArticle(String articleId) {
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
 
-        if(articleEntity==null){
+        if (articleEntity == null) {
             throw new RuntimeException("게시글이 존재하지 않습니다.");
         }
 

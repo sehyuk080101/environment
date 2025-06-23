@@ -1,58 +1,38 @@
 package com.dgsw.environment.service;
 
-import com.dgsw.environment.dto.CommentDTO;
-import com.dgsw.environment.dto.UpdateCommentDTO;
+import com.dgsw.environment.dto.CommentResponse;
+import com.dgsw.environment.dto.CreateCommentRequest;
+import com.dgsw.environment.dto.UpdateCommentRequest;
 import com.dgsw.environment.entity.CommentEntity;
 import com.dgsw.environment.repository.CommentRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class CommentService {
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
 
-    public String writeComment(String articleId, CommentDTO commentDTO) {
-        if (commentRepository.existsByCommentIdAndArticleId(commentDTO.getCommentId(), articleId)) {
-            throw new RuntimeException("해당 ID를 가진 댓글이 이미 존재합니다.");
-        }
-
+    public void writeComment(String articleId, CreateCommentRequest request, String authorId) {
         CommentEntity commentEntity = new CommentEntity();
+
         commentEntity.setArticleId(articleId);
-        commentEntity.setCommentId(commentDTO.getCommentId());
-        commentEntity.setContent(commentDTO.getContent());
+        commentEntity.setAuthorId(authorId);
+        commentEntity.setId(UUID.randomUUID().toString());
+        commentEntity.setContent(request.getContent());
 
         commentRepository.save(commentEntity);
-
-        return "성공적으로 댓글을 작성했습니다.";
     }
 
-    public String deleteComment(String articleId, String commentId) {
-        Optional<CommentEntity> optionalCommentEntity = commentRepository.findByCommentIdAndArticleId(commentId, articleId);
-
-        if (optionalCommentEntity.isEmpty()) {
-            return "게시글이 존재하지 않습니다.";
-        }
-
-        commentRepository.deleteById(commentId);
-
-        return "성공적으로 댓글을 삭제했습니다.";
-    }
-
-    public List<CommentDTO> getAllComments(String articleId) {
-        List<CommentEntity> commentEntities = commentRepository.findAllByArticleId(articleId);
-
-        return commentEntities.stream().map(comment -> new CommentDTO(comment.getCommentId(), comment.getArticleId(), comment.getContent())).collect(Collectors.toList());
-    }
-
-    public CommentDTO getComment(String articleId, String commentId) {
-        Optional<CommentEntity> optionalCommentEntity = commentRepository.findByCommentIdAndArticleId(commentId, articleId);
+    public void deleteComment(String articleId, String commentId, String authorId) {
+        Optional<CommentEntity> optionalCommentEntity = commentRepository.findByIdAndArticleId(commentId, articleId);
 
         if (optionalCommentEntity.isEmpty()) {
             throw new RuntimeException("댓글이 존재하지 않습니다.");
@@ -60,23 +40,34 @@ public class CommentService {
 
         CommentEntity commentEntity = optionalCommentEntity.get();
 
-        return new CommentDTO(commentEntity.getCommentId(), commentEntity.getArticleId(), commentEntity.getContent());
+        if (!commentEntity.getAuthorId().equals(authorId)) {
+            throw new RuntimeException("댓글을 삭제할 권한이 없습니다.");
+        }
+
+        commentRepository.delete(commentEntity);
     }
 
-    public String updateComment(String articleId, String commentId, UpdateCommentDTO updateCommentDTO) {
-        Optional<CommentEntity> optionalCommentEntity = commentRepository.findByCommentIdAndArticleId(commentId, articleId);
+    public List<CommentResponse> getAllComments(String articleId) {
+    }
+
+    public String updateComment(String articleId, String commentId, UpdateCommentRequest request, String authorId) {
+        Optional<CommentEntity> optionalCommentEntity = commentRepository.findByIdAndArticleId(commentId, articleId);
 
         if (optionalCommentEntity.isEmpty()) {
             throw new RuntimeException("댓글이 존재하지 않습니다.");
         }
 
-        if (updateCommentDTO.getContent().isBlank()) {
+        CommentEntity commentEntity = optionalCommentEntity.get();
+
+        if (!commentEntity.getAuthorId().equals(authorId)) {
+            throw new RuntimeException("댓글을 수정할 권한이 없습니다.");
+        }
+
+        if (request.getContent().isBlank()) {
             throw new RuntimeException("내용은 공백이 될 수 없습니다.");
         }
 
-        CommentEntity commentEntity = optionalCommentEntity.get();
-
-        commentEntity.setContent(updateCommentDTO.getContent());
+        commentEntity.setContent(request.getContent());
 
         commentRepository.save(commentEntity);
 
