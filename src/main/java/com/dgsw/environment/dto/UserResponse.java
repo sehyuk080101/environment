@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,4 +14,6 @@ import lombok.Setter;
 public class UserResponse {
     private String id;
     private String username;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

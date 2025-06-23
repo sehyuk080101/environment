@@ -50,7 +50,14 @@ public class CommentService {
     public List<CommentResponse> getAllComments(String articleId) {
         List<CommentView> commentViews = commentRepository.findCommentViewsByArticleId(articleId);
 
-        return commentViews.stream().map(comment -> new CommentResponse(comment.getId(), new CommentResponse.Author(comment.getAuthorId(), comment.getAuthorName()), comment.getContent())).toList();
+        return commentViews.stream().map(comment ->
+                CommentResponse.builder()
+                        .id(comment.getId())
+                        .author(new CommentResponse.Author(comment.getAuthorId(), comment.getAuthorName()))
+                        .content(comment.getContent())
+                        .timestamp(comment.getCreatedAt())
+                        .build()
+        ).toList();
     }
 
     public String updateComment(String articleId, String commentId, UpdateCommentRequest request, String authorId) {

@@ -31,30 +31,24 @@ public class ArticleService {
     }
 
     public ArticleDetailResponse getArticle(String articleId) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
-
-        return new ArticleDTO(articleEntity.getArticleId(), articleEntity.getTitle(), articleEntity.getContent());
+        return new ArticleDetailResponse();
     }
 
     public List<ArticleResponse> getAllArticles() {
         List<ArticleEntity> articleEntities = articleRepository.findAll();
 
-        return articleEntities.stream().map(article -> new ArticleDTO(article.getArticleId(), article.getTitle(), article.getContent())).toList();
+        return articleEntities.stream().map(article -> new ArticleResponse(article.getArticleId(), article.getTitle())).toList();
     }
 
     public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
         if (updateArticleDTO.getTitle().isBlank()) {
             throw new RuntimeException("제목은 공백이 될 수 없습니다.");
         }
+
         if (updateArticleDTO.getContent().isBlank()) {
             throw new RuntimeException("내용은 공백이 될 수 없습니다.");
         }
@@ -66,11 +60,7 @@ public class ArticleService {
     }
 
     public void deleteArticle(String articleId) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
-
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         articleRepository.delete(articleEntity);
     }
