@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +22,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
 
     public void writeArticle(CreateArticleRequest request, String authorId) {
-        ArticleEntity articleEntity = ArticleEntity.createArticle(UUID.randomUUID().toString(), authorId, request.getTitle(), request.getContent());
+        ArticleEntity articleEntity = ArticleEntity.createArticle(authorId, request.getTitle(), request.getContent());
 
         articleRepository.save(articleEntity);
     }

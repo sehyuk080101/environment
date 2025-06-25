@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -23,7 +22,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public void writeComment(String articleId, CreateCommentRequest request, String authorId) {
-        CommentEntity commentEntity = CommentEntity.createComment(UUID.randomUUID().toString(), articleId, authorId, request.getContent());
+        CommentEntity commentEntity = CommentEntity.createComment(articleId, authorId, request.getContent());
 
         commentRepository.save(commentEntity);
     }

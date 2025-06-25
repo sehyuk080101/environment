@@ -42,7 +42,7 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests((configurer) -> configurer
                         .requestMatchers(HttpMethod.POST, "/users/signup", "/users/login", "/users/refresh").anonymous()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**", "/articles", "/articles/{articleId}", "/articles/{articleId}/comments", "/articles/{articleId}/comments/{commentId}", "/users/{userId}").permitAll()
                         .anyRequest().authenticated()
                 )
 

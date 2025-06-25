@@ -3,10 +3,13 @@ package com.dgsw.environment.entity;
 import com.dgsw.environment.exception.ArticleErrorCode;
 import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.global.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -29,11 +32,11 @@ public class ArticleEntity extends BaseEntity {
         this.content = content;
     }
 
-    public static ArticleEntity createArticle(String id, String authorId, String title, String content) {
+    public static ArticleEntity createArticle(String authorId, String title, String content) {
         validateTitle(title);
         validateContent(content);
 
-        return new ArticleEntity(id, authorId, title, content);
+        return new ArticleEntity(UUID.randomUUID().toString(), authorId, title, content);
     }
 
     public void changeTitle(String title) {

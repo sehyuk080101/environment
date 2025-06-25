@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<CommentEntity, String> {
     Optional<CommentEntity> findByIdAndArticleId(String commentId, String articleId);
 
-    @Query(value = """
+    @Query("""
                 SELECT
                     c.id as id,
                     c.content as content,

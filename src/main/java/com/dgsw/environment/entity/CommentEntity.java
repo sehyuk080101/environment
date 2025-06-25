@@ -3,10 +3,13 @@ package com.dgsw.environment.entity;
 import com.dgsw.environment.exception.CommentErrorCode;
 import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.global.entity.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
+
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,6 +17,7 @@ import lombok.*;
 @Table(name = "comments")
 public class CommentEntity extends BaseEntity {
     @Id
+    @Column(name = "comment_id", nullable = false)
     private String id;
 
     private String articleId;
@@ -29,10 +33,10 @@ public class CommentEntity extends BaseEntity {
         this.content = content;
     }
 
-    public static CommentEntity createComment(String id, String articleId, String authorId, String content) {
+    public static CommentEntity createComment(String articleId, String authorId, String content) {
         validateContent(content);
 
-        return new CommentEntity(id, articleId, authorId, content);
+        return new CommentEntity(UUID.randomUUID().toString(), articleId, authorId, content);
     }
 
     public void changeContent(String content) {
