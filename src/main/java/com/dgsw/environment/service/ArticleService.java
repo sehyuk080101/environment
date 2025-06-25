@@ -43,7 +43,7 @@ public class ArticleService {
     }
 
     public List<ArticleResponse> getAllArticles() {
-        List<ArticleView> articleViews = articleRepository.findArticleViews();
+        List<ArticleView> articleViews = articleRepository.findAllProjectBy();
 
         return articleViews.stream().map(article ->
                 ArticleResponse.builder()

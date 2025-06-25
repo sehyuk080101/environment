@@ -39,13 +39,14 @@ public class UserService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        UserEntity userEntity = getUserById(request.getUserId());
+        String id = request.getId();
+        UserEntity userEntity = getUserById(id);
 
         if (!passwordEncoder.matches(request.getPassword(), userEntity.getPassword())) {
             throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        TokenResponse tokenResponse = tokenProvider.generateTokens(request.getUserId());
+        TokenResponse tokenResponse = tokenProvider.generateTokens(id);
 
         return new LoginResponse(tokenResponse, userEntity.getUsername());
     }

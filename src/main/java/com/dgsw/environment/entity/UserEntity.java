@@ -52,11 +52,13 @@ public class UserEntity extends BaseEntity {
 
     public void changeUsername(String username) {
         validateUsername(username);
+
         this.username = username;
     }
 
     public void changePassword(String password) {
         validatePassword(password);
+
         this.password = password;
     }
 }

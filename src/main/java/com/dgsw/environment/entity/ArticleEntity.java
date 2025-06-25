@@ -14,7 +14,7 @@ import lombok.*;
 @Table(name = "articles")
 public class ArticleEntity extends BaseEntity {
     @Id
-    private String articleId;
+    private String id;
 
     private String authorId;
 
@@ -22,18 +22,18 @@ public class ArticleEntity extends BaseEntity {
 
     private String content;
 
-    private ArticleEntity(String articleId, String authorId, String title, String content) {
-        this.articleId = articleId;
+    private ArticleEntity(String id, String authorId, String title, String content) {
+        this.id = id;
         this.authorId = authorId;
         this.title = title;
         this.content = content;
     }
 
-    public static ArticleEntity createArticle(String articleId, String authorId, String title, String content) {
+    public static ArticleEntity createArticle(String id, String authorId, String title, String content) {
         validateTitle(title);
         validateContent(content);
 
-        return new ArticleEntity(articleId, authorId, title, content);
+        return new ArticleEntity(id, authorId, title, content);
     }
 
     public void changeTitle(String title) {

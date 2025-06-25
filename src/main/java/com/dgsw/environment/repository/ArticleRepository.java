@@ -16,5 +16,11 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
     @Query(value = "SELECT a.id, a.title, a.content FROM article a WHERE a.id = :id LIMIT 1", nativeQuery = true)
     Optional<ArticleDetailView> findArticleViewByArticleId(@Param("id") String id);
 
-    List<ArticleView> findArticleViews();
+    @Query(value = """
+            SELECT a.id as id, a.authorId as authorId, u.username as authorName, a.title as title, a.updatedAt as updatedAt
+            FROM ArticleEntity a
+            JOIN UserEntity u
+            ON a.authorId = u.id
+            """)
+    List<ArticleView> findAllProjectBy();
 }

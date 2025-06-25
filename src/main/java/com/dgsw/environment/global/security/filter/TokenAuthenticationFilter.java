@@ -33,7 +33,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = getHeaderValue(request);
 
         try {
             if (token != null) {
@@ -52,9 +52,15 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (CustomException e) {
             setErrorResponse(response, e.getErrorCode());
+            return;
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getHeaderValue(HttpServletRequest request) {
+        String raw = request.getHeader(HttpHeaders.AUTHORIZATION);
+        return (raw != null && raw.startsWith("Bearer ")) ? raw.substring(7).trim() : null;
     }
 
     private void setErrorResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
@@ -62,6 +68,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        response.getWriter().write(objectMapper.writeValueAsString(ErrorResponse.of(errorCode.getMessage(), errorCode.getStatus())));
+        response.getWriter().write(objectMapper.writeValueAsString(new ErrorResponse(errorCode.getMessage())));
     }
 }

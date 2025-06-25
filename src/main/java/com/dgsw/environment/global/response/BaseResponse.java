@@ -1,5 +1,6 @@
 package com.dgsw.environment.global.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 @Getter
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class BaseResponse<T> {
     private T data;
     private String message;
@@ -16,7 +18,7 @@ public class BaseResponse<T> {
     }
 
     public static <T> ResponseEntity<BaseResponse<T>> of(T data, String message, HttpStatus status) {
-        return ResponseEntity.status(status).body(new BaseResponse<T>(data, message));
+        return ResponseEntity.status(status).body(new BaseResponse<>(data, message));
     }
 
     public static <T> ResponseEntity<BaseResponse<T>> ok(T data, String message) {
