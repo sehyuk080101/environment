@@ -6,7 +6,5 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CreateCommentRequest {
-    private String articleId;
     private String content;
-    private String password;
 }
