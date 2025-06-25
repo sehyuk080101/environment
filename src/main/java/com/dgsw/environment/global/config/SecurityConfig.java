@@ -41,7 +41,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers(HttpMethod.POST, "/users/signup", "/users/logi").anonymous()
+                        .requestMatchers(HttpMethod.POST, "/users/signup", "/users/login").anonymous()
                         .requestMatchers(HttpMethod.POST, "/users/refresh").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**", "/articles", "/articles/{articleId}", "/articles/{articleId}/comments", "/articles/{articleId}/comments/{commentId}", "/users/{userId}").permitAll()
                         .anyRequest().authenticated()
