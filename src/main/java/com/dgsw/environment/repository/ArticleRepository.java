@@ -29,10 +29,15 @@ public interface ArticleRepository extends JpaRepository<ArticleEntity, String> 
     Optional<ArticleDetailView> findArticleViewByArticleId(@Param("id") String id);
 
     @Query("""
-            SELECT a.id as id, a.authorId as authorId, u.username as authorName, a.title as title, a.updatedAt as updatedAt
-            FROM ArticleEntity a
-            JOIN UserEntity u
-            ON a.authorId = u.id
+                SELECT
+                    a.id as id,
+                    a.authorId as authorId,
+                    u.username as authorName,
+                    a.title as title,
+                    a.updatedAt as timestamp
+                FROM ArticleEntity a
+                JOIN UserEntity u
+                ON a.authorId = u.id
             """)
     List<ArticleView> findAllProjectBy();
 }

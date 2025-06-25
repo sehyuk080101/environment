@@ -19,7 +19,8 @@ public interface CommentRepository extends JpaRepository<CommentEntity, String> 
                     c.id as id,
                     c.content as content,
                     u.id as authorId,
-                    u.username as authorName
+                    u.username as authorName,
+                    c.updatedAt as timestamp
                 FROM CommentEntity c
                 JOIN UserEntity u ON c.authorId = u.id
                 WHERE c.articleId = :articleId

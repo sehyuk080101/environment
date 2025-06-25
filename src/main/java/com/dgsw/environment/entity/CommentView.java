@@ -11,5 +11,5 @@ public interface CommentView {
 
     String getAuthorName();
 
-    LocalDateTime getCreatedAt();
+    LocalDateTime getTimestamp();
 }

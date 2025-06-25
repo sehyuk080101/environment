@@ -51,7 +51,7 @@ public class CommentService {
                         .id(comment.getId())
                         .author(new CommentResponse.Author(comment.getAuthorId(), comment.getAuthorName()))
                         .content(comment.getContent())
-                        .timestamp(comment.getCreatedAt())
+                        .timestamp(comment.getTimestamp())
                         .build()
         ).toList();
     }

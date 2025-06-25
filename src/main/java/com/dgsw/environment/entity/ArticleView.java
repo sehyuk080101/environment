@@ -11,5 +11,5 @@ public interface ArticleView {
 
     String getTitle();
 
-    LocalDateTime getUpdatedAt();
+    LocalDateTime getTimestamp();
 }
