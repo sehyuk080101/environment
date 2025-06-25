@@ -30,14 +30,10 @@ public class UserService {
         }
 
         if (request.getId().length() < 3) {
-            throw new CustomException(UserErrorCode.INVALID_USER_ID_LENGTH);
+            throw new CustomException(UserErrorCode.INVALID_USER_ID);
         }
 
-        UserEntity userEntity = new UserEntity();
-
-        userEntity.setId(request.getId());
-        userEntity.setUsername(request.getUsername());
-        userEntity.setPassword(passwordEncoder.encode(request.getPassword()));
+        UserEntity userEntity = UserEntity.createUser(request.getId(), request.getUsername(), passwordEncoder.encode(request.getPassword()));
 
         userRepository.save(userEntity);
     }

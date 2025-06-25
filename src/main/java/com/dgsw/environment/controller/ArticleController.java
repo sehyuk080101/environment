@@ -22,8 +22,8 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<BaseResponse<Void>> writeArticle(@RequestBody CreateArticleRequest request) {
-        articleService.writeArticle(request);
+    public ResponseEntity<BaseResponse<Void>> writeArticle(@RequestBody CreateArticleRequest request, @CurrentUserId String authorId) {
+        articleService.writeArticle(request, authorId);
 
         return BaseResponse.created("성공적으로 게시글을 작성하였습니다.");
     }
@@ -41,10 +41,10 @@ public class ArticleController {
     @PutMapping("/{articleId}")
     public ResponseEntity<BaseResponse<Void>> updateArticle(
             @PathVariable String articleId,
-            @RequestBody UpdateArticleRequest updateArticleDTO,
+            @RequestBody UpdateArticleRequest request,
             @CurrentUserId String authorId
     ) {
-        articleService.updateArticle(articleId, updateArticleDTO, authorId);
+        articleService.updateArticle(articleId, request, authorId);
 
         return BaseResponse.ok("성공적으로 게시글을 수정했습니다.");
     }

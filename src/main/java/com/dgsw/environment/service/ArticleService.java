@@ -12,24 +12,18 @@ import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
-    public void writeArticle(CreateArticleRequest request) {
-        ArticleEntity articleEntity = new ArticleEntity();
-
-        articleEntity.setArticleId(UUID.randomUUID().toString());
-        articleEntity.setTitle(request.getTitle());
-        articleEntity.setContent(request.getContent());
+    public void writeArticle(CreateArticleRequest request, String authorId) {
+        ArticleEntity articleEntity = ArticleEntity.createArticle(UUID.randomUUID().toString(), authorId, request.getTitle(), request.getContent());
 
         articleRepository.save(articleEntity);
     }
@@ -61,23 +55,23 @@ public class ArticleService {
         ).toList();
     }
 
-    public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO, String authorId) {
+    public void updateArticle(String articleId, UpdateArticleRequest request, String authorId) {
         ArticleEntity articleEntity = getArticleById(articleId);
 
         if (!articleEntity.getAuthorId().equals(authorId)) {
             throw new CustomException(ArticleErrorCode.NO_EDIT_PERMISSION);
         }
 
-        if (updateArticleDTO.getTitle().isBlank()) {
+        if (request.getTitle().isBlank()) {
             throw new CustomException(ArticleErrorCode.EMPTY_TITLE);
         }
 
-        if (updateArticleDTO.getContent().isBlank()) {
+        if (request.getContent().isBlank()) {
             throw new CustomException(ArticleErrorCode.EMPTY_CONTENT);
         }
 
-        articleEntity.setTitle(updateArticleDTO.getTitle());
-        articleEntity.setContent(updateArticleDTO.getContent());
+        articleEntity.changeTitle(request.getTitle());
+        articleEntity.changeContent(request.getContent());
 
         articleRepository.save(articleEntity);
     }

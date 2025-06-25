@@ -23,12 +23,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     public void writeComment(String articleId, CreateCommentRequest request, String authorId) {
-        CommentEntity commentEntity = new CommentEntity();
-
-        commentEntity.setArticleId(articleId);
-        commentEntity.setAuthorId(authorId);
-        commentEntity.setId(UUID.randomUUID().toString());
-        commentEntity.setContent(request.getContent());
+        CommentEntity commentEntity = CommentEntity.createComment(UUID.randomUUID().toString(), articleId, authorId, request.getContent());
 
         commentRepository.save(commentEntity);
     }
@@ -79,7 +74,7 @@ public class CommentService {
             throw new CustomException(CommentErrorCode.EMPTY_COMMENT_CONTENT);
         }
 
-        commentEntity.setContent(request.getContent());
+        commentEntity.changeContent(request.getContent());
 
         commentRepository.save(commentEntity);
     }

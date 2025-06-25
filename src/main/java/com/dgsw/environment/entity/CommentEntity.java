@@ -1,17 +1,15 @@
 package com.dgsw.environment.entity;
 
+import com.dgsw.environment.exception.CommentErrorCode;
+import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.global.entity.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "comments")
 public class CommentEntity extends BaseEntity {
@@ -23,4 +21,29 @@ public class CommentEntity extends BaseEntity {
     private String authorId;
 
     private String content;
+
+    private CommentEntity(String id, String articleId, String authorId, String content) {
+        this.id = id;
+        this.articleId = articleId;
+        this.authorId = authorId;
+        this.content = content;
+    }
+
+    public static CommentEntity createComment(String id, String articleId, String authorId, String content) {
+        validateContent(content);
+
+        return new CommentEntity(id, articleId, authorId, content);
+    }
+
+    public void changeContent(String content) {
+        validateContent(content);
+
+        this.content = content;
+    }
+
+    private static void validateContent(String content) {
+        if (content == null || content.isBlank()) {
+            throw new CustomException(CommentErrorCode.EMPTY_COMMENT_CONTENT);
+        }
+    }
 }
