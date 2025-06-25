@@ -39,9 +39,9 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers(HttpMethod.POST, "/auth/signup", "/auth/login", "/auth/reissue").anonymous()
-                        .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/users/signup", "/users/login", "/users/refresh").anonymous()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 .addFilterBefore(new TokenAuthenticationFilter(tokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
