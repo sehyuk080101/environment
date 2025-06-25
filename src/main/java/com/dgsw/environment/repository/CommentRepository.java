@@ -1,6 +1,5 @@
 package com.dgsw.environment.repository;
 
-import com.dgsw.environment.dto.CommentResponse;
 import com.dgsw.environment.entity.CommentEntity;
 import com.dgsw.environment.entity.CommentView;
 import org.springframework.data.jpa.repository.JpaRepository;
