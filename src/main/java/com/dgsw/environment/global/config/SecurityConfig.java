@@ -3,6 +3,7 @@ package com.dgsw.environment.global.config;
 import com.dgsw.environment.global.security.token.TokenProvider;
 import com.dgsw.environment.global.security.filter.TokenAuthenticationFilter;
 import com.dgsw.environment.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,7 +46,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
 
-                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider, userRepository), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new TokenAuthenticationFilter(tokenProvider, userRepository, objectMapper), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

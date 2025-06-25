@@ -5,7 +5,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class ArticleDetailResponse {
@@ -17,7 +16,6 @@ public class ArticleDetailResponse {
     private LocalDateTime updatedAt;
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class Author {
         private String id;

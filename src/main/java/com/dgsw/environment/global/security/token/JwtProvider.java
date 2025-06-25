@@ -1,6 +1,8 @@
 package com.dgsw.environment.global.security.token;
 
 import com.dgsw.environment.dto.response.TokenResponse;
+import com.dgsw.environment.exception.CustomException;
+import com.dgsw.environment.exception.TokenErrorCode;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;
@@ -59,15 +61,15 @@ public class JwtProvider implements TokenProvider {
         try {
             return parser.parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
-            throw new RuntimeException("Expired JWT");
+            throw new CustomException(TokenErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw new RuntimeException("Unsupported JWT");
+            throw new CustomException(TokenErrorCode.UNSUPPORTED_TOKEN);
         } catch (MalformedJwtException e) {
-            throw new RuntimeException("Malformed JWT");
+            throw new CustomException(TokenErrorCode.MALFORMED_TOKEN);
         } catch (SignatureException e) {
-            throw new RuntimeException("Invalid JWT Signature");
+            throw new CustomException(TokenErrorCode.INVALID_SIGNATURE);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid JWT");
+            throw new CustomException(TokenErrorCode.INVALID_TOKEN);
         }
     }
 

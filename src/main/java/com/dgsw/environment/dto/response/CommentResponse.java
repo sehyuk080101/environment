@@ -5,7 +5,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class CommentResponse {
@@ -15,7 +14,6 @@ public class CommentResponse {
     private LocalDateTime timestamp;
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class Author {
         private String id;
