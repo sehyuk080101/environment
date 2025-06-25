@@ -1,8 +1,6 @@
 package com.dgsw.environment.service;
 
-import com.dgsw.environment.dto.request.CreateUserRequest;
-import com.dgsw.environment.dto.request.LoginRequest;
-import com.dgsw.environment.dto.request.RefreshRequest;
+import com.dgsw.environment.dto.request.*;
 import com.dgsw.environment.dto.response.LoginResponse;
 import com.dgsw.environment.dto.response.TokenResponse;
 import com.dgsw.environment.dto.response.UserResponse;
@@ -71,6 +69,26 @@ public class UserService {
         UserEntity userEntity = getUserById(id);
 
         return new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getCreatedAt(), userEntity.getUpdatedAt());
+    }
+
+    public void updateUsername(UpdateUsernameRequest request, String userId) {
+        UserEntity userEntity = getUserById(userId);
+
+        userEntity.changeUsername(request.getUsername());
+
+        userRepository.save(userEntity);
+    }
+
+    public void updatePassword(UpdatePasswordRequest request, String userId) {
+        UserEntity userEntity = getUserById(userId);
+
+        if (!passwordEncoder.matches(request.getOldPassword(), userEntity.getPassword())) {
+            throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
+        }
+
+        userEntity.changePassword(request.getNewPassword());
+
+        userRepository.save(userEntity);
     }
 
     private UserEntity getUserById(String id) {
