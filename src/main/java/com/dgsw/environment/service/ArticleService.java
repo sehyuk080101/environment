@@ -7,6 +7,9 @@ import com.dgsw.environment.dto.request.UpdateArticleRequest;
 import com.dgsw.environment.entity.ArticleDetailView;
 import com.dgsw.environment.entity.ArticleEntity;
 import com.dgsw.environment.entity.ArticleView;
+import com.dgsw.environment.exception.ArticleErrorCode;
+import com.dgsw.environment.exception.CustomException;
+import com.dgsw.environment.exception.ErrorCode;
 import com.dgsw.environment.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -90,6 +93,6 @@ public class ArticleService {
     }
 
     private ArticleEntity getArticleById(String articleId) {
-        return articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+        return articleRepository.findById(articleId).orElseThrow(() -> new CustomException(ArticleErrorCode.ARTICLE_NOT_FOUND));
     }
 }

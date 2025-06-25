@@ -2,7 +2,7 @@ package com.dgsw.environment.controller;
 
 import com.dgsw.environment.dto.request.CreateCommentRequest;
 import com.dgsw.environment.dto.request.UpdateCommentRequest;
-import com.dgsw.environment.dto.response.BaseResponse;
+import com.dgsw.environment.global.response.BaseResponse;
 import com.dgsw.environment.dto.response.CommentResponse;
 import com.dgsw.environment.global.annotation.CurrentUserId;
 import com.dgsw.environment.service.CommentService;

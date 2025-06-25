@@ -1,4 +1,4 @@
-package com.dgsw.environment.dto.response;
+package com.dgsw.environment.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

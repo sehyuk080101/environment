@@ -7,6 +7,8 @@ import com.dgsw.environment.dto.response.LoginResponse;
 import com.dgsw.environment.dto.response.TokenResponse;
 import com.dgsw.environment.dto.response.UserResponse;
 import com.dgsw.environment.entity.UserEntity;
+import com.dgsw.environment.exception.CustomException;
+import com.dgsw.environment.exception.UserErrorCode;
 import com.dgsw.environment.global.security.TokenProvider;
 import com.dgsw.environment.global.security.jwt.TokenPurpose;
 import com.dgsw.environment.repository.UserRepository;
@@ -61,7 +63,7 @@ public class UserService {
         String userId = tokenProvider.getUserId(refreshToken);
 
         if (!userRepository.existsById(userId)) {
-            throw new RuntimeException("존재하지 않는 유저입니다.");
+            throw new CustomException(UserErrorCode.USER_NOT_FOUND);
         }
 
         return tokenProvider.generateTokens(userId);
@@ -74,6 +76,6 @@ public class UserService {
     }
 
     private UserEntity getUserById(String id) {
-        return userRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
+        return userRepository.findById(id).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
     }
 }

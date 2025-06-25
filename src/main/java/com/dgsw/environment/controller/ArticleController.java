@@ -4,7 +4,7 @@ import com.dgsw.environment.dto.request.CreateArticleRequest;
 import com.dgsw.environment.dto.request.UpdateArticleRequest;
 import com.dgsw.environment.dto.response.ArticleDetailResponse;
 import com.dgsw.environment.dto.response.ArticleResponse;
-import com.dgsw.environment.dto.response.BaseResponse;
+import com.dgsw.environment.global.response.BaseResponse;
 import com.dgsw.environment.global.annotation.CurrentUserId;
 import com.dgsw.environment.service.ArticleService;
 import lombok.RequiredArgsConstructor;

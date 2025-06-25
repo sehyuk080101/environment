@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ArticleError {
-    ARTICLE_NOT_FOUND("게시글이 존재하지 않습니다.", HttpStatus.NOT_FOUND),;
+public enum UserErrorCode implements ErrorCode {
+    USER_NOT_FOUND("유저가 존재하지 않습니다.", HttpStatus.NOT_FOUND);
 
     private final String message;
     private final HttpStatus status;
