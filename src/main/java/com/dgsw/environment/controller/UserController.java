@@ -3,6 +3,7 @@ package com.dgsw.environment.controller;
 import com.dgsw.environment.dto.*;
 import com.dgsw.environment.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,24 +13,24 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseDTO signUp(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<BaseResponse<Void>> signUp(@RequestBody CreateUserRequest request) {
         userService.signUp(request);
 
-        return new ResponseDTO("성공적으로 회원가입을 하였습니다.");
+        return BaseResponse.created("성공적으로 회원가입을 하였습니다.");
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-        return userService.login(request);
+    public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
+        return BaseResponse.ok(userService.login(request), "성공적으로 로그인하였습니다.");
     }
 
     @PostMapping("/refresh")
-    public TokenResponse refresh(@RequestBody RefreshRequest request) {
-        return userService.refresh(request);
+    public ResponseEntity<BaseResponse<TokenResponse>> refresh(@RequestBody RefreshRequest request) {
+        return BaseResponse.ok(userService.refresh(request), "성공적으로 토큰을 재발급했습니다.");
     }
 
     @GetMapping("/{userId}")
-    public UserResponse getUserInfo(@PathVariable String userId) {
-        return userService.getUserInfo(userId);
+    public ResponseEntity<BaseResponse<UserResponse>> getUserInfo(@PathVariable String userId) {
+        return BaseResponse.ok(userService.getUserInfo(userId), "성공적으로 유저를 조회했습니다.");
     }
 }
