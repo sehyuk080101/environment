@@ -2,8 +2,9 @@ package com.dgsw.environment.controller;
 
 import com.dgsw.environment.dto.*;
 import com.dgsw.environment.service.ArticleService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,38 +12,38 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequestMapping("/articles")
+@RequiredArgsConstructor
 public class ArticleController {
-    @Autowired
-    ArticleService articleService;
+    private final ArticleService articleService;
 
     @PostMapping
-    public ResponseDTO writeArticle(@RequestBody CreateArticleRequest request) {
+    public ResponseEntity<BaseResponse<Void>> writeArticle(@RequestBody CreateArticleRequest request) {
         articleService.writeArticle(request);
 
-        return new ResponseDTO("성공적으로 게시글을 작성하였습니다.");
+        return BaseResponse.created("성공적으로 게시글을 작성하였습니다.");
     }
 
     @GetMapping("/{articleId}")
-    public ArticleDetailResponse getArticle(@PathVariable String articleId) {
-        return articleService.getArticle(articleId);
+    public ResponseEntity<BaseResponse<ArticleDetailResponse>> getArticle(@PathVariable String articleId) {
+        return BaseResponse.ok(articleService.getArticle(articleId), "성공적으로 게시글을 조회했습니다.");
     }
 
     @GetMapping
-    public List<ArticleResponse> getAllArticles() {
-        return articleService.getAllArticles();
+    public ResponseEntity<BaseResponse<List<ArticleResponse>>> getAllArticles() {
+        return BaseResponse.ok(articleService.getAllArticles(), "성공적으로 게시글 목록을 조회했습니다.");
     }
 
     @PutMapping("/{articleId}")
-    public ResponseDTO updateArticle(@PathVariable String articleId, @RequestBody UpdateArticleRequest updateArticleDTO) {
+    public ResponseEntity<BaseResponse<Void>> updateArticle(@PathVariable String articleId, @RequestBody UpdateArticleRequest updateArticleDTO) {
         articleService.updateArticle(articleId, updateArticleDTO);
 
-        return new ResponseDTO("성공적으로 게시글을 수정했습니다.");
+        return BaseResponse.ok("성공적으로 게시글을 수정했습니다.");
     }
 
     @DeleteMapping("/{articleId}")
-    public ResponseDTO deleteArticle(@PathVariable String articleId) {
+    public ResponseEntity<BaseResponse<Void>> deleteArticle(@PathVariable String articleId) {
         articleService.deleteArticle(articleId);
 
-        return new ResponseDTO("성공적으로 게시글을 삭제했습니다.");
+        return BaseResponse.ok("성공적으로 게시글을 삭제했습니다.");
     }
 }

@@ -60,7 +60,7 @@ public class CommentService {
         ).toList();
     }
 
-    public String updateComment(String articleId, String commentId, UpdateCommentRequest request, String authorId) {
+    public void updateComment(String articleId, String commentId, UpdateCommentRequest request, String authorId) {
         Optional<CommentEntity> optionalCommentEntity = commentRepository.findByIdAndArticleId(commentId, articleId);
 
         if (optionalCommentEntity.isEmpty()) {
@@ -80,7 +80,5 @@ public class CommentService {
         commentEntity.setContent(request.getContent());
 
         commentRepository.save(commentEntity);
-
-        return "성공적으로 댓글을 수정했습니다.";
     }
 }

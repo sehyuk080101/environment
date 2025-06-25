@@ -36,6 +36,6 @@ public class UserService {
     public UserResponse getUserInfo(String id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new RuntimeException("존재하지 않는 유저입니다."));
 
-        return new UserResponse(userEntity.getId(), userEntity.getUsername());
+        return new UserResponse(userEntity.getId(), userEntity.getUsername(), userEntity.getCreatedAt(), userEntity.getUpdatedAt());
     }
 }
