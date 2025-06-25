@@ -1,22 +1,22 @@
-package com.dgsw.environment.dto;
+package com.dgsw.environment.dto.response;
 
 import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ArticleResponse {
+public class ArticleDetailResponse {
     private String id;
     private Author author;
     private String title;
-    private LocalDateTime timestamp;
+    private String content;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Author {

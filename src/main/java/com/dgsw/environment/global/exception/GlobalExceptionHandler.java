@@ -1,6 +1,5 @@
 package com.dgsw.environment.global.exception;
 
-import com.dgsw.environment.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

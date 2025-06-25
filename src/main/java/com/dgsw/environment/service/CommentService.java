@@ -1,8 +1,8 @@
 package com.dgsw.environment.service;
 
-import com.dgsw.environment.dto.CommentResponse;
-import com.dgsw.environment.dto.CreateCommentRequest;
-import com.dgsw.environment.dto.UpdateCommentRequest;
+import com.dgsw.environment.dto.response.CommentResponse;
+import com.dgsw.environment.dto.request.CreateCommentRequest;
+import com.dgsw.environment.dto.request.UpdateCommentRequest;
 import com.dgsw.environment.entity.CommentEntity;
 import com.dgsw.environment.entity.CommentView;
 import com.dgsw.environment.repository.CommentRepository;

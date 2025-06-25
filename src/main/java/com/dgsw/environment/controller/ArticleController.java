@@ -1,6 +1,11 @@
 package com.dgsw.environment.controller;
 
-import com.dgsw.environment.dto.*;
+import com.dgsw.environment.dto.request.CreateArticleRequest;
+import com.dgsw.environment.dto.request.UpdateArticleRequest;
+import com.dgsw.environment.dto.response.ArticleDetailResponse;
+import com.dgsw.environment.dto.response.ArticleResponse;
+import com.dgsw.environment.dto.response.BaseResponse;
+import com.dgsw.environment.global.annotation.CurrentUserId;
 import com.dgsw.environment.service.ArticleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,15 +39,19 @@ public class ArticleController {
     }
 
     @PutMapping("/{articleId}")
-    public ResponseEntity<BaseResponse<Void>> updateArticle(@PathVariable String articleId, @RequestBody UpdateArticleRequest updateArticleDTO) {
-        articleService.updateArticle(articleId, updateArticleDTO);
+    public ResponseEntity<BaseResponse<Void>> updateArticle(
+            @PathVariable String articleId,
+            @RequestBody UpdateArticleRequest updateArticleDTO,
+            @CurrentUserId String authorId
+    ) {
+        articleService.updateArticle(articleId, updateArticleDTO, authorId);
 
         return BaseResponse.ok("성공적으로 게시글을 수정했습니다.");
     }
 
     @DeleteMapping("/{articleId}")
-    public ResponseEntity<BaseResponse<Void>> deleteArticle(@PathVariable String articleId) {
-        articleService.deleteArticle(articleId);
+    public ResponseEntity<BaseResponse<Void>> deleteArticle(@PathVariable String articleId, @CurrentUserId String authorId) {
+        articleService.deleteArticle(articleId, authorId);
 
         return BaseResponse.ok("성공적으로 게시글을 삭제했습니다.");
     }

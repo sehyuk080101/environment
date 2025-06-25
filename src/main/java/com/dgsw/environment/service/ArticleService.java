@@ -1,9 +1,9 @@
 package com.dgsw.environment.service;
 
-import com.dgsw.environment.dto.ArticleDetailResponse;
-import com.dgsw.environment.dto.ArticleResponse;
-import com.dgsw.environment.dto.CreateArticleRequest;
-import com.dgsw.environment.dto.UpdateArticleRequest;
+import com.dgsw.environment.dto.response.ArticleDetailResponse;
+import com.dgsw.environment.dto.response.ArticleResponse;
+import com.dgsw.environment.dto.request.CreateArticleRequest;
+import com.dgsw.environment.dto.request.UpdateArticleRequest;
 import com.dgsw.environment.entity.ArticleDetailView;
 import com.dgsw.environment.entity.ArticleEntity;
 import com.dgsw.environment.entity.ArticleView;
@@ -58,8 +58,12 @@ public class ArticleService {
         ).toList();
     }
 
-    public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+    public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO, String authorId) {
+        ArticleEntity articleEntity = getArticleById(articleId);
+
+        if (!articleEntity.getAuthorId().equals(authorId)) {
+            throw new RuntimeException("게시글을 수정할 권한이 없습니다.");
+        }
 
         if (updateArticleDTO.getTitle().isBlank()) {
             throw new RuntimeException("제목은 공백이 될 수 없습니다.");
@@ -75,9 +79,17 @@ public class ArticleService {
         articleRepository.save(articleEntity);
     }
 
-    public void deleteArticle(String articleId) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+    public void deleteArticle(String articleId, String authorId) {
+        ArticleEntity articleEntity = getArticleById(articleId);
+
+        if (!articleEntity.getAuthorId().equals(authorId)) {
+            throw new RuntimeException("게시글을 삭제할 권한이 없습니다.");
+        }
 
         articleRepository.delete(articleEntity);
+    }
+
+    private ArticleEntity getArticleById(String articleId) {
+        return articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
     }
 }
