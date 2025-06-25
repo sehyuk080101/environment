@@ -1,4 +1,11 @@
 package com.dgsw.environment.dto.request;
 
-public record UpdatePasswordRequest(String oldPassword, String newPassword) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class UpdatePasswordRequest {
+    private String oldPassword;
+    private String newPassword;
 }

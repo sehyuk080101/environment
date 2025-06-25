@@ -1,4 +1,10 @@
 package com.dgsw.environment.dto.request;
 
-public record UpdateUsernameRequest(String username) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
+public class UpdateUsernameRequest {
+    private String username;
 }
