@@ -49,7 +49,7 @@ public class ArticleService {
                         .id(article.getId())
                         .title(article.getTitle())
                         .author(new ArticleResponse.Author(article.getAuthorId(), article.getAuthorName()))
-                        .timestamp(article.getUpdatedAt())
+                        .timestamp(article.getTimestamp())
                         .build()
         ).toList();
     }
