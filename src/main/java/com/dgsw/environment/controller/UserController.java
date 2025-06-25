@@ -1,13 +1,16 @@
 package com.dgsw.environment.controller;
 
-import com.dgsw.environment.dto.request.CreateUserRequest;
-import com.dgsw.environment.dto.request.LoginRequest;
-import com.dgsw.environment.dto.request.RefreshRequest;
+import com.dgsw.environment.dto.request.*;
+import com.dgsw.environment.global.annotation.CurrentUserId;
 import com.dgsw.environment.global.response.BaseResponse;
 import com.dgsw.environment.dto.response.LoginResponse;
 import com.dgsw.environment.dto.response.TokenResponse;
 import com.dgsw.environment.dto.response.UserResponse;
 import com.dgsw.environment.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +21,59 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    @Operation(summary = "회원가입", description = "사용자가 회원가입합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "회원가입 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터")
+    })
     @PostMapping("/signup")
     public ResponseEntity<BaseResponse<Void>> signUp(@RequestBody CreateUserRequest request) {
         userService.signUp(request);
-
         return BaseResponse.created("성공적으로 회원가입을 하였습니다.");
     }
 
+    @Operation(summary = "로그인", description = "이메일과 비밀번호로 로그인합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "로그인 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패")
+    })
     @PostMapping("/login")
     public ResponseEntity<BaseResponse<LoginResponse>> login(@RequestBody LoginRequest request) {
         return BaseResponse.ok(userService.login(request), "성공적으로 로그인하였습니다.");
     }
 
+    @Operation(summary = "토큰 재발급", description = "리프레시 토큰을 사용하여 액세스 토큰을 재발급합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "토큰 재발급 성공"),
+            @ApiResponse(responseCode = "401", description = "리프레시 토큰 오류")
+    })
     @PostMapping("/refresh")
     public ResponseEntity<BaseResponse<TokenResponse>> refresh(@RequestBody RefreshRequest request) {
         return BaseResponse.ok(userService.refresh(request), "성공적으로 토큰을 재발급했습니다.");
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<BaseResponse<UserResponse>> getUserInfo(@PathVariable String userId) {
+    @Operation(summary = "내 정보 조회", description = "현재 로그인한 사용자의 정보를 조회합니다.")
+    @GetMapping("/me")
+    public ResponseEntity<BaseResponse<UserResponse>> getUserInfo(
+            @Parameter(hidden = true) @CurrentUserId String userId) {
         return BaseResponse.ok(userService.getUserInfo(userId), "성공적으로 유저를 조회했습니다.");
+    }
+
+    @Operation(summary = "이름 변경", description = "로그인한 사용자의 이름을 변경합니다.")
+    @PutMapping("/me/username")
+    public ResponseEntity<BaseResponse<Void>> updateUsername(
+            @RequestBody UpdateUsernameRequest request,
+            @Parameter(hidden = true) @CurrentUserId String userId) {
+        userService.updateUsername(request, userId);
+        return BaseResponse.ok("성공적으로 이름을 변경했습니다.");
+    }
+
+    @Operation(summary = "비밀번호 변경", description = "로그인한 사용자의 비밀번호를 변경합니다.")
+    @PutMapping("/me/password")
+    public ResponseEntity<BaseResponse<Void>> updatePassword(
+            @RequestBody UpdatePasswordRequest request,
+            @Parameter(hidden = true) @CurrentUserId String userId) {
+        userService.updatePassword(request, userId);
+        return BaseResponse.ok("성공적으로 비밀번호를 변경했습니다.");
     }
 }
