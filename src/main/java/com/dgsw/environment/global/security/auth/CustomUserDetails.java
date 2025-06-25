@@ -1,4 +1,4 @@
-package com.dgsw.environment.global.security;
+package com.dgsw.environment.global.security.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -8,9 +8,10 @@ import com.dgsw.environment.dto.response.TokenResponse;
 import com.dgsw.environment.dto.response.UserResponse;
 import com.dgsw.environment.entity.UserEntity;
 import com.dgsw.environment.exception.CustomException;
+import com.dgsw.environment.exception.TokenErrorCode;
 import com.dgsw.environment.exception.UserErrorCode;
-import com.dgsw.environment.global.security.TokenProvider;
-import com.dgsw.environment.global.security.jwt.TokenPurpose;
+import com.dgsw.environment.global.security.token.TokenProvider;
+import com.dgsw.environment.global.security.token.TokenPurpose;
 import com.dgsw.environment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,11 +26,11 @@ public class UserService {
 
     public void signUp(CreateUserRequest request) {
         if (userRepository.existsById(request.getId())) {
-            throw new RuntimeException("이미 존재하는 유저입니다.");
+            throw new CustomException(UserErrorCode.DUPLICATE_USER_ID);
         }
 
         if (request.getId().length() < 3) {
-            throw new RuntimeException("ID는 2글자 이하가 될 수 없습니다.");
+            throw new CustomException(UserErrorCode.INVALID_USER_ID_LENGTH);
         }
 
         UserEntity userEntity = new UserEntity();
@@ -45,7 +46,7 @@ public class UserService {
         UserEntity userEntity = getUserById(request.getUserId());
 
         if (!passwordEncoder.matches(request.getPassword(), userEntity.getPassword())) {
-            throw new RuntimeException("비밀번호가 맞지 않습니다.");
+            throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
         TokenResponse tokenResponse = tokenProvider.generateTokens(request.getUserId());
@@ -57,7 +58,7 @@ public class UserService {
         String refreshToken = request.getRefreshToken();
 
         if (tokenProvider.getTokenPurpose(refreshToken) != TokenPurpose.REFRESH) {
-            throw new RuntimeException("잘못된 토큰입니다.");
+            throw new CustomException(TokenErrorCode.INVALID_TOKEN);
         }
 
         String userId = tokenProvider.getUserId(refreshToken);

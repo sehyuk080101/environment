@@ -5,6 +5,8 @@ import com.dgsw.environment.dto.request.CreateCommentRequest;
 import com.dgsw.environment.dto.request.UpdateCommentRequest;
 import com.dgsw.environment.entity.CommentEntity;
 import com.dgsw.environment.entity.CommentView;
+import com.dgsw.environment.exception.CommentErrorCode;
+import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,13 +37,13 @@ public class CommentService {
         Optional<CommentEntity> optionalCommentEntity = commentRepository.findByIdAndArticleId(commentId, articleId);
 
         if (optionalCommentEntity.isEmpty()) {
-            throw new RuntimeException("댓글이 존재하지 않습니다.");
+            throw new CustomException(CommentErrorCode.COMMENT_NOT_FOUND);
         }
 
         CommentEntity commentEntity = optionalCommentEntity.get();
 
         if (!commentEntity.getAuthorId().equals(authorId)) {
-            throw new RuntimeException("댓글을 삭제할 권한이 없습니다.");
+            throw new CustomException(CommentErrorCode.NO_DELETE_PERMISSION);
         }
 
         commentRepository.delete(commentEntity);
@@ -64,17 +66,17 @@ public class CommentService {
         Optional<CommentEntity> optionalCommentEntity = commentRepository.findByIdAndArticleId(commentId, articleId);
 
         if (optionalCommentEntity.isEmpty()) {
-            throw new RuntimeException("댓글이 존재하지 않습니다.");
+            throw new CustomException(CommentErrorCode.COMMENT_NOT_FOUND);
         }
 
         CommentEntity commentEntity = optionalCommentEntity.get();
 
         if (!commentEntity.getAuthorId().equals(authorId)) {
-            throw new RuntimeException("댓글을 수정할 권한이 없습니다.");
+            throw new CustomException(CommentErrorCode.NO_EDIT_PERMISSION);
         }
 
         if (request.getContent().isBlank()) {
-            throw new RuntimeException("내용은 공백이 될 수 없습니다.");
+            throw new CustomException(CommentErrorCode.EMPTY_COMMENT_CONTENT);
         }
 
         commentEntity.setContent(request.getContent());

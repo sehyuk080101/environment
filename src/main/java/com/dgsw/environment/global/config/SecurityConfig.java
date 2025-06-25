@@ -1,6 +1,6 @@
-package com.dgsw.environment.global.security.config;
+package com.dgsw.environment.global.config;
 
-import com.dgsw.environment.global.security.TokenProvider;
+import com.dgsw.environment.global.security.token.TokenProvider;
 import com.dgsw.environment.global.security.filter.TokenAuthenticationFilter;
 import com.dgsw.environment.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

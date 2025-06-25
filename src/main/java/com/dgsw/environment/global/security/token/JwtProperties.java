@@ -1,4 +1,4 @@
-package com.dgsw.environment.global.security.jwt;
+package com.dgsw.environment.global.security.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,7 +1,6 @@
-package com.dgsw.environment.global.security;
+package com.dgsw.environment.global.security.token;
 
 import com.dgsw.environment.dto.response.TokenResponse;
-import com.dgsw.environment.global.security.jwt.TokenPurpose;
 
 public interface TokenProvider {
     TokenResponse generateTokens(String userId);

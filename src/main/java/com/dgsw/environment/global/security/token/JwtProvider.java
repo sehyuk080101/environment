@@ -1,7 +1,6 @@
-package com.dgsw.environment.global.security.jwt;
+package com.dgsw.environment.global.security.token;
 
 import com.dgsw.environment.dto.response.TokenResponse;
-import com.dgsw.environment.global.security.TokenProvider;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.PostConstruct;

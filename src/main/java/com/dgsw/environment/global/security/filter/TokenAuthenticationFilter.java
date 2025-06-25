@@ -1,8 +1,8 @@
 package com.dgsw.environment.global.security.filter;
 
 import com.dgsw.environment.entity.UserEntity;
-import com.dgsw.environment.global.security.CustomUserDetails;
-import com.dgsw.environment.global.security.TokenProvider;
+import com.dgsw.environment.global.security.auth.CustomUserDetails;
+import com.dgsw.environment.global.security.token.TokenProvider;
 import com.dgsw.environment.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

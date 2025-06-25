@@ -9,7 +9,6 @@ import com.dgsw.environment.entity.ArticleEntity;
 import com.dgsw.environment.entity.ArticleView;
 import com.dgsw.environment.exception.ArticleErrorCode;
 import com.dgsw.environment.exception.CustomException;
-import com.dgsw.environment.exception.ErrorCode;
 import com.dgsw.environment.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,8 @@ public class ArticleService {
     }
 
     public ArticleDetailResponse getArticle(String articleId) {
-        ArticleDetailView articleDetailView = articleRepository.findArticleViewByArticleId(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+        ArticleDetailView articleDetailView = articleRepository.findArticleViewByArticleId(articleId)
+                .orElseThrow(() -> new CustomException(ArticleErrorCode.ARTICLE_NOT_FOUND));
 
         return ArticleDetailResponse.builder()
                 .id(articleDetailView.getId())
@@ -65,15 +65,15 @@ public class ArticleService {
         ArticleEntity articleEntity = getArticleById(articleId);
 
         if (!articleEntity.getAuthorId().equals(authorId)) {
-            throw new RuntimeException("게시글을 수정할 권한이 없습니다.");
+            throw new CustomException(ArticleErrorCode.NO_EDIT_PERMISSION);
         }
 
         if (updateArticleDTO.getTitle().isBlank()) {
-            throw new RuntimeException("제목은 공백이 될 수 없습니다.");
+            throw new CustomException(ArticleErrorCode.EMPTY_TITLE);
         }
 
         if (updateArticleDTO.getContent().isBlank()) {
-            throw new RuntimeException("내용은 공백이 될 수 없습니다.");
+            throw new CustomException(ArticleErrorCode.EMPTY_CONTENT);
         }
 
         articleEntity.setTitle(updateArticleDTO.getTitle());
@@ -86,7 +86,7 @@ public class ArticleService {
         ArticleEntity articleEntity = getArticleById(articleId);
 
         if (!articleEntity.getAuthorId().equals(authorId)) {
-            throw new RuntimeException("게시글을 삭제할 권한이 없습니다.");
+            throw new CustomException(ArticleErrorCode.NO_DELETE_PERMISSION);
         }
 
         articleRepository.delete(articleEntity);
