@@ -4,13 +4,16 @@ import com.dgsw.environment.dto.ArticleDetailResponse;
 import com.dgsw.environment.dto.ArticleResponse;
 import com.dgsw.environment.dto.CreateArticleRequest;
 import com.dgsw.environment.dto.UpdateArticleRequest;
+import com.dgsw.environment.entity.ArticleDetailView;
 import com.dgsw.environment.entity.ArticleEntity;
+import com.dgsw.environment.entity.ArticleView;
 import com.dgsw.environment.repository.ArticleRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,30 +34,38 @@ public class ArticleService {
     }
 
     public ArticleDetailResponse getArticle(String articleId) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
+        ArticleDetailView articleDetailView = articleRepository.findArticleViewByArticleId(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
-
-        return new ArticleDTO(articleEntity.getArticleId(), articleEntity.getTitle(), articleEntity.getContent());
+        return ArticleDetailResponse.builder()
+                .id(articleDetailView.getId())
+                .author(new ArticleDetailResponse.Author(articleDetailView.getAuthorId(), articleDetailView.getAuthorName()))
+                .title(articleDetailView.getTitle())
+                .content(articleDetailView.getContent())
+                .createdAt(articleDetailView.getCreatedAt())
+                .updatedAt(articleDetailView.getUpdatedAt())
+                .build();
     }
 
     public List<ArticleResponse> getAllArticles() {
-        List<ArticleEntity> articleEntities = articleRepository.findAll();
+        List<ArticleView> articleViews = articleRepository.findArticleViews();
 
-        return articleEntities.stream().map(article -> new ArticleDTO(article.getArticleId(), article.getTitle(), article.getContent())).toList();
+        return articleViews.stream().map(article ->
+                ArticleResponse.builder()
+                        .id(article.getId())
+                        .title(article.getTitle())
+                        .author(new ArticleResponse.Author(article.getAuthorId(), article.getAuthorName()))
+                        .timestamp(article.getUpdatedAt())
+                        .build()
+        ).toList();
     }
 
-    public String updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
+    public void updateArticle(String articleId, UpdateArticleRequest updateArticleDTO) {
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
         if (updateArticleDTO.getTitle().isBlank()) {
             throw new RuntimeException("제목은 공백이 될 수 없습니다.");
         }
+
         if (updateArticleDTO.getContent().isBlank()) {
             throw new RuntimeException("내용은 공백이 될 수 없습니다.");
         }
@@ -63,19 +74,11 @@ public class ArticleService {
         articleEntity.setContent(updateArticleDTO.getContent());
 
         articleRepository.save(articleEntity);
-
-        return "성공적으로 게시글을 수정했습니다.";
     }
 
-    public String deleteArticle(String articleId) {
-        ArticleEntity articleEntity = articleRepository.findById(articleId).orElse(null);
-
-        if (articleEntity == null) {
-            throw new RuntimeException("게시글이 존재하지 않습니다.");
-        }
+    public void deleteArticle(String articleId) {
+        ArticleEntity articleEntity = articleRepository.findById(articleId).orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
 
         articleRepository.delete(articleEntity);
-
-        return "성공적으로 게시글을 삭제했습니다.";
     }
 }

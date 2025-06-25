@@ -4,6 +4,7 @@ import com.dgsw.environment.dto.CommentResponse;
 import com.dgsw.environment.dto.CreateCommentRequest;
 import com.dgsw.environment.dto.UpdateCommentRequest;
 import com.dgsw.environment.entity.CommentEntity;
+import com.dgsw.environment.entity.CommentView;
 import com.dgsw.environment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -48,6 +48,16 @@ public class CommentService {
     }
 
     public List<CommentResponse> getAllComments(String articleId) {
+        List<CommentView> commentViews = commentRepository.findCommentViewsByArticleId(articleId);
+
+        return commentViews.stream().map(comment ->
+                CommentResponse.builder()
+                        .id(comment.getId())
+                        .author(new CommentResponse.Author(comment.getAuthorId(), comment.getAuthorName()))
+                        .content(comment.getContent())
+                        .timestamp(comment.getCreatedAt())
+                        .build()
+        ).toList();
     }
 
     public String updateComment(String articleId, String commentId, UpdateCommentRequest request, String authorId) {
