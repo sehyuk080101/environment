@@ -7,7 +7,7 @@ import com.dgsw.environment.exception.UserErrorCode;
 import com.dgsw.environment.global.response.ErrorResponse;
 import com.dgsw.environment.global.security.auth.CustomUserDetails;
 import com.dgsw.environment.global.security.token.TokenProvider;
-import com.dgsw.environment.repository.UserRepository;
+import com.dgsw.environment.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -60,6 +60,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private String getHeaderValue(HttpServletRequest request) {
         String raw = request.getHeader(HttpHeaders.AUTHORIZATION);
+        
         return (raw != null && raw.startsWith("Bearer ")) ? raw.substring(7).trim() : null;
     }
 

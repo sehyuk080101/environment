@@ -2,7 +2,7 @@ package com.dgsw.environment.global.config;
 
 import com.dgsw.environment.global.security.token.TokenProvider;
 import com.dgsw.environment.global.security.filter.TokenAuthenticationFilter;
-import com.dgsw.environment.repository.UserRepository;
+import com.dgsw.environment.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -41,8 +41,8 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests((configurer) -> configurer
-                        .requestMatchers(HttpMethod.POST, "/users/signup", "/users/login").anonymous()
-                        .requestMatchers(HttpMethod.POST, "/users/refresh").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/signup", "/auth/login").anonymous()
+                        .requestMatchers(HttpMethod.POST, "/auth/refresh").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**", "/articles", "/articles/{articleId}", "/articles/{articleId}/comments", "/articles/{articleId}/comments/{commentId}", "/users/{userId}").permitAll()
                         .anyRequest().authenticated()
                 )
