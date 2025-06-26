@@ -3,7 +3,6 @@ package com.dgsw.environment.entity;
 import com.dgsw.environment.exception.ArticleErrorCode;
 import com.dgsw.environment.exception.CustomException;
 import com.dgsw.environment.global.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
