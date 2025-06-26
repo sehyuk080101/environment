@@ -86,7 +86,7 @@ public class UserService {
             throw new CustomException(UserErrorCode.PASSWORD_MISMATCH);
         }
 
-        userEntity.changePassword(request.getNewPassword());
+        userEntity.changePassword(passwordEncoder.encode(request.getNewPassword()));
 
         userRepository.save(userEntity);
     }
